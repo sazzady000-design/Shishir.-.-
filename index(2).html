@@ -1,0 +1,953 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dear Big Brother Shishir... 💍 It's Time To Get Married!</title>
+    <style>
+        /* ==========================================================================
+           1. SETUP & THEME VARIABLES (Royal Blue & Gold Palette)
+           ========================================================================== */
+        :root {
+            --bg-dark: #070d18;
+            --bg-mid: #0f1b2d;
+            --royal-blue: #1e3a8a;
+            --gold-light: #fef08a;
+            --gold-primary: #d4af37;
+            --gold-glow: #f59e0b;
+            --gold-gradient: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
+            --text-light: #f8fafc;
+            --text-gold: #fef08a;
+            --glass-bg: rgba(15, 27, 45, 0.65);
+            --glass-border: rgba(212, 175, 55, 0.3);
+            --glass-glow: rgba(212, 175, 55, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            background: radial-gradient(circle at center, var(--bg-mid) 0%, var(--bg-dark) 100%);
+            color: var(--text-light);
+            min-height: 100vh;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* ==========================================================================
+           2. CANVAS & OVERLAYS
+           ========================================================================== */
+        #bgCanvas, #fxCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+        #bgCanvas { z-index: 1; }
+        #fxCanvas { z-index: 99; }
+
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px 20px 80px 20px;
+        }
+
+        /* ==========================================================================
+           3. PREMIUM LOADING SCREEN
+           ========================================================================== */
+        #loader {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-dark);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            transition: opacity 0.8s ease, visibility 0.8s;
+        }
+
+        .loader-ring {
+            font-size: 4rem;
+            animation: pulseRing 1.5s infinite ease-in-out;
+        }
+
+        .loader-text {
+            margin-top: 20px;
+            font-size: 1.2rem;
+            letter-spacing: 2px;
+            color: var(--gold-primary);
+            text-transform: uppercase;
+        }
+
+        @keyframes pulseRing {
+            0%, 100% { transform: scale(1); filter: drop-shadow(0 0 10px rgba(212,175,55,0.5)); }
+            50% { transform: scale(1.2); filter: drop-shadow(0 0 25px rgba(255,215,0,0.9)); }
+        }
+
+        /* ==========================================================================
+           4. AUDIO CONTROLLER BAR
+           ========================================================================== */
+        .audio-bar {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 100;
+        }
+
+        .music-btn {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            color: var(--gold-light);
+            padding: 10px 18px;
+            border-radius: 50px;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.3s ease;
+        }
+
+        .music-btn:hover {
+            transform: translateY(-2px);
+            border-color: var(--gold-primary);
+            box-shadow: 0 6px 20px rgba(212,175,55,0.4);
+        }
+
+        /* ==========================================================================
+           5. HERO SECTION
+           ========================================================================== */
+        .hero {
+            text-align: center;
+            padding: 80px 20px 40px;
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .badge {
+            background: rgba(212, 175, 55, 0.15);
+            border: 1px solid var(--gold-primary);
+            color: var(--gold-light);
+            padding: 6px 18px;
+            border-radius: 30px;
+            font-size: 0.9rem;
+            letter-spacing: 2px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.2);
+            animation: fadeInDown 1s ease;
+        }
+
+        .hero h1 {
+            font-size: clamp(2.2rem, 5vw, 4rem);
+            color: #ffffff;
+            font-weight: 800;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+            animation: fadeInUp 1s ease 0.2s backwards;
+        }
+
+        .hero h2 {
+            font-size: clamp(2rem, 4.5vw, 3.5rem);
+            background: var(--gold-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 900;
+            margin-bottom: 25px;
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.4));
+            animation: fadeInUp 1s ease 0.4s backwards;
+        }
+
+        .subtitle {
+            font-size: clamp(1.1rem, 2.5vw, 1.4rem);
+            color: rgba(255, 255, 255, 0.9);
+            max-width: 650px;
+            line-height: 1.6;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 18px 25px;
+            border-radius: 15px;
+            border-left: 4px solid var(--gold-primary);
+            backdrop-filter: blur(5px);
+            animation: fadeInUp 1s ease 0.6s backwards;
+        }
+
+        /* ==========================================================================
+           6. GLASSMORPHISM CARDS & GENERAL SECTIONS
+           ========================================================================== */
+        .glass-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            padding: 35px 25px;
+            margin-bottom: 50px;
+            transition: transform 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(212, 175, 55, 0.6);
+            box-shadow: 0 12px 40px rgba(212, 175, 55, 0.2);
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: clamp(1.6rem, 3vw, 2.2rem);
+            color: var(--gold-light);
+            margin-bottom: 30px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            position: relative;
+        }
+
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 60px;
+            height: 3px;
+            background: var(--gold-primary);
+            margin: 10px auto 0;
+            border-radius: 2px;
+        }
+
+        /* ==========================================================================
+           7. FUNNY COUNTDOWN SECTION
+           ========================================================================== */
+        .timer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 15px;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+
+        .timer-box {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 15px;
+            padding: 20px 10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .timer-number {
+            font-size: clamp(2.2rem, 4vw, 3.2rem);
+            font-weight: 900;
+            color: #ffffff;
+            font-family: monospace;
+            text-shadow: 0 0 10px var(--gold-glow);
+        }
+
+        .timer-label {
+            font-size: 0.85rem;
+            color: var(--gold-light);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 5px;
+        }
+
+        /* ==========================================================================
+           8. FUNNY REASONS GRID
+           ========================================================================== */
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .reason-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .reason-card:hover {
+            transform: translateY(-8px) scale(1.02);
+            background: rgba(212, 175, 55, 0.08);
+            border-color: var(--gold-primary);
+        }
+
+        .reason-icon {
+            font-size: 2.2rem;
+            background: rgba(0, 0, 0, 0.3);
+            width: 55px;
+            height: 55px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            flex-shrink: 0;
+            border: 1px solid var(--glass-border);
+        }
+
+        .reason-text {
+            font-size: 1.1rem;
+            font-weight: 600;
+            line-height: 1.4;
+            color: #ffffff;
+        }
+
+        /* ==========================================================================
+           9. BIG BUTTON SECTION
+           ========================================================================== */
+        .cta-section {
+            text-align: center;
+            padding: 40px 0;
+        }
+
+        .big-glowing-btn {
+            position: relative;
+            display: inline-block;
+            background: var(--gold-gradient);
+            color: #070d18;
+            font-size: clamp(1.3rem, 3vw, 2.2rem);
+            font-weight: 900;
+            padding: 24px 50px;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            box-shadow: 0 0 30px rgba(212, 175, 55, 0.6), inset 0 0 15px rgba(255, 255, 255, 0.8);
+            transition: all 0.3s ease;
+            animation: pulseGlow 2s infinite;
+        }
+
+        .big-glowing-btn:hover {
+            transform: scale(1.08) translateY(-3px);
+            box-shadow: 0 0 50px rgba(255, 215, 0, 0.9), inset 0 0 20px rgba(255, 255, 255, 1);
+        }
+
+        .big-glowing-btn:active {
+            transform: scale(0.98);
+        }
+
+        @keyframes pulseGlow {
+            0%, 100% { box-shadow: 0 0 25px rgba(212, 175, 55, 0.5), inset 0 0 10px rgba(255, 255, 255, 0.5); }
+            50% { box-shadow: 0 0 55px rgba(255, 215, 0, 0.9), 0 0 25px rgba(255, 255, 255, 0.6); }
+        }
+
+        /* ==========================================================================
+           10. FINAL MESSAGE SECTION
+           ========================================================================== */
+        .letter-card {
+            background: linear-gradient(135deg, rgba(30, 58, 138, 0.3), rgba(15, 27, 45, 0.8));
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-card::before {
+            content: '💌';
+            position: absolute;
+            right: -20px;
+            bottom: -20px;
+            font-size: 10rem;
+            opacity: 0.05;
+            pointer-events: none;
+        }
+
+        .letter-content {
+            font-size: 1.25rem;
+            line-height: 1.8;
+            color: #f1f5f9;
+            max-width: 750px;
+            margin: 0 auto;
+        }
+
+        .letter-content p {
+            margin-bottom: 15px;
+        }
+
+        .serial-line {
+            font-size: 1.4rem;
+            color: var(--gold-light);
+            font-weight: 700;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 10px 15px;
+            border-radius: 10px;
+            display: inline-block;
+            border: 1px dashed var(--gold-primary);
+        }
+
+        .signature {
+            margin-top: 30px;
+            text-align: right;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--gold-light);
+        }
+
+        /* ==========================================================================
+           11. CELEBRATION MODAL
+           ========================================================================== */
+        .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(7, 13, 24, 0.85);
+            backdrop-filter: blur(15px);
+            z-index: 1000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        .modal.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .modal-box {
+            background: var(--bg-mid);
+            border: 2px solid var(--gold-primary);
+            border-radius: 25px;
+            padding: 40px 30px;
+            text-align: center;
+            max-width: 500px;
+            width: 100%;
+            box-shadow: 0 0 50px rgba(212, 175, 55, 0.5);
+            transform: scale(0.7);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .modal.active .modal-box {
+            transform: scale(1);
+        }
+
+        .modal-icon {
+            font-size: 4.5rem;
+            margin-bottom: 15px;
+            animation: bounce 1s infinite alternate;
+        }
+
+        .modal-title {
+            font-size: 2.2rem;
+            color: var(--gold-light);
+            margin-bottom: 15px;
+            font-weight: 900;
+        }
+
+        .modal-text {
+            font-size: 1.1rem;
+            margin-bottom: 30px;
+            color: #cbd5e1;
+        }
+
+        .close-btn {
+            background: var(--gold-gradient);
+            border: none;
+            color: #000;
+            font-weight: 800;
+            padding: 12px 30px;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: transform 0.2s;
+        }
+
+        .close-btn:hover {
+            transform: scale(1.05);
+        }
+
+        /* ==========================================================================
+           12. FOOTER & ANIMATIONS
+           ========================================================================== */
+        footer {
+            text-align: center;
+            padding: 30px 20px;
+            font-size: 1.1rem;
+            color: rgba(255, 255, 255, 0.7);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        footer strong {
+            color: var(--gold-light);
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes bounce {
+            from { transform: translateY(0); }
+            to { transform: translateY(-15px); }
+        }
+
+        @media (max-width: 600px) {
+            .hero { padding-top: 60px; }
+            .glass-card { padding: 25px 18px; }
+            .big-glowing-btn { padding: 18px 30px; width: 100%; }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Canvas for Ambient Background Particles -->
+    <canvas id="bgCanvas"></canvas>
+
+    <!-- Canvas for Fireworks & Confetti Explosions -->
+    <canvas id="fxCanvas"></canvas>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <div class="loader-ring">💍</div>
+        <div class="loader-text">Preparing Shishir Bhai's Proposal...</div>
+    </div>
+
+    <!-- Audio Controller -->
+    <div class="audio-bar">
+        <button id="musicToggle" class="music-btn">
+            <span id="musicIcon">🎵</span>
+            <span id="musicText">Play Wedding Tune</span>
+        </button>
+    </div>
+
+    <!-- Main Content Container -->
+    <div class="container">
+
+        <!-- 1. Hero Section -->
+        <section class="hero">
+            <div class="badge">👑 Special Royal Message</div>
+            <h1>Dear Big Brother Shishir...</h1>
+            <h2>💍 It's Time To Get Married!</h2>
+            <p class="subtitle">
+                "Everyone is waiting... even the neighbors are asking, 'When is the wedding?' 😂"
+            </p>
+        </section>
+
+        <!-- 2. Funny Countdown Section -->
+        <section class="glass-card">
+            <h3 class="section-title">Family Patience Remaining...</h3>
+            <div class="timer-container">
+                <div class="timer-box">
+                    <div class="timer-number" id="days">0</div>
+                    <div class="timer-label">Days Left 😂</div>
+                </div>
+                <div class="timer-box">
+                    <div class="timer-number" id="hours">00</div>
+                    <div class="timer-label">Hours</div>
+                </div>
+                <div class="timer-box">
+                    <div class="timer-number" id="mins">00</div>
+                    <div class="timer-label">Mins</div>
+                </div>
+                <div class="timer-box">
+                    <div class="timer-number" id="secs">00</div>
+                    <div class="timer-label">Secs</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. Funny Reasons To Marry -->
+        <section class="glass-card">
+            <h3 class="section-title">Top 6 Reasons You MUST Marry Now</h3>
+            <div class="reasons-grid">
+                <div class="reason-card">
+                    <div class="reason-icon">👵</div>
+                    <div class="reason-text">Mom is waiting.</div>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">👴</div>
+                    <div class="reason-text">Dad is waiting.</div>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">🗣️</div>
+                    <div class="reason-text">Relatives won't stop asking.</div>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">🍗</div>
+                    <div class="reason-text">We all want delicious wedding food.</div>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">💃</div>
+                    <div class="reason-text">We want to dance at your wedding.</div>
+                </div>
+                <div class="reason-card">
+                    <div class="reason-icon">😎</div>
+                    <div class="reason-text">After your wedding... it's my turn!</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Big Glowing Proposal Button Section -->
+        <section class="cta-section">
+            <button id="yesBtn" class="big-glowing-btn">
+                💍 YES! I WILL GET MARRIED
+            </button>
+        </section>
+
+        <!-- 5. Final Heartfelt Message Section -->
+        <section class="glass-card letter-card">
+            <h3 class="section-title">A Message From The Heart</h3>
+            <div class="letter-content">
+                <p>Dear Shishir Bhai,</p>
+                <p>We all love you so much. Now please get married soon.</p>
+                <p class="serial-line">After your wedding... it's my serial! 😄❤️</p>
+                <div class="signature">
+                    — With Love,<br>
+                    <span style="color: #ffffff; font-size: 1.5rem;">Sazzad</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer>
+            Made with ❤️ by <strong>Sazzad</strong>
+        </footer>
+
+    </div>
+
+    <!-- Celebration Modal -->
+    <div id="modal" class="modal">
+        <div class="modal-box">
+            <div class="modal-icon">🎉👑💍</div>
+            <h2 class="modal-title">🎉 Congratulations Shishir Bhai!</h2>
+            <p class="modal-text">
+                You clicked YES! The date is officially locked! The whole family is celebrating! 🥳🥂
+            </p>
+            <button id="closeModal" class="close-btn">Let's Celebrate! 🍾</button>
+        </div>
+    </div>
+
+    <!-- Embedded Pure JavaScript Implementation -->
+    <script>
+        /* ==========================================================================
+           1. LOADER & INITIALIZATION
+           ========================================================================== */
+        window.addEventListener('load', () => {
+            const loader = document.getElementById('loader');
+            setTimeout(() => {
+                loader.style.opacity = '0';
+                loader.style.visibility = 'hidden';
+            }, 600);
+            startCountdownAnimation();
+        });
+
+        /* ==========================================================================
+           2. FUNNY COUNTDOWN TIMER ANIMATION (Ticks down rapidly to 0)
+           ========================================================================== */
+        function startCountdownAnimation() {
+            let count = 99;
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minsEl = document.getElementById('mins');
+            const secsEl = document.getElementById('secs');
+
+            const timer = setInterval(() => {
+                count--;
+                if (count >= 0) {
+                    daysEl.innerText = count;
+                    hoursEl.innerText = String(Math.floor(count * 0.24)).padStart(2, '0');
+                    minsEl.innerText = String(Math.floor(count * 0.6)).padStart(2, '0');
+                    secsEl.innerText = String(count % 60).padStart(2, '0');
+                } else {
+                    clearInterval(timer);
+                    daysEl.innerText = "0";
+                    hoursEl.innerText = "00";
+                    minsEl.innerText = "00";
+                    secsEl.innerText = "00";
+                }
+            }, 30);
+        }
+
+        /* ==========================================================================
+           3. WEB AUDIO API SYNTHESIZER (100% Offline Music & Sound Effects)
+           ========================================================================== */
+        let audioCtx = null;
+        let isPlayingMusic = false;
+        let musicInterval = null;
+
+        function initAudio() {
+            if (!audioCtx) {
+                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+        }
+
+        // Plays a pleasant synth tone (frequency in Hz, duration in sec)
+        function playNote(freq, type = 'sine', duration = 0.3, time = 0, vol = 0.1) {
+            if (!audioCtx) return;
+            try {
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.setValueAtTime(freq, audioCtx.currentTime + time);
+                gain.gain.setValueAtTime(vol, audioCtx.currentTime + time);
+                gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + time + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start(audioCtx.currentTime + time);
+                osc.stop(audioCtx.currentTime + time + duration);
+            } catch(e) {}
+        }
+
+        // Festive Wedding Tune Loop
+        function toggleMusic() {
+            initAudio();
+            const btnText = document.getElementById('musicText');
+            const btnIcon = document.getElementById('musicIcon');
+
+            if (isPlayingMusic) {
+                clearInterval(musicInterval);
+                isPlayingMusic = false;
+                btnText.innerText = "Play Wedding Tune";
+                btnIcon.innerText = "🎵";
+            } else {
+                isPlayingMusic = true;
+                btnText.innerText = "Pause Music";
+                btnIcon.innerText = "🎶";
+                
+                // Mendelssohn inspired wedding melody notes
+                const notes = [261.63, 329.63, 392.00, 523.25, 440.00, 349.23, 392.00, 523.25];
+                let step = 0;
+                
+                musicInterval = setInterval(() => {
+                    playNote(notes[step % notes.length], 'triangle', 0.4, 0, 0.08);
+                    step++;
+                }, 400);
+            }
+        }
+
+        document.getElementById('musicToggle').addEventListener('click', toggleMusic);
+
+        // Sound effect on YES button click (Wedding Fanfare Chimes)
+        function playWeddingFanfare() {
+            initAudio();
+            const chords = [523.25, 659.25, 783.99, 1046.50]; // C Major high octave
+            chords.forEach((freq, idx) => {
+                playNote(freq, 'sine', 1.2, idx * 0.12, 0.15);
+                playNote(freq * 0.5, 'triangle', 1.2, idx * 0.12, 0.1);
+            });
+        }
+
+        /* ==========================================================================
+           4. AMBIENT BACKGROUND CANVAS (Floating Hearts & Sparkles)
+           ========================================================================== */
+        const bgCanvas = document.getElementById('bgCanvas');
+        const bgCtx = bgCanvas.getContext('2d');
+
+        let bgWidth, bgHeight;
+        let particles = [];
+
+        function resizeBg() {
+            bgWidth = bgCanvas.width = window.innerWidth;
+            bgHeight = bgCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeBg);
+        resizeBg();
+
+        class BackgroundParticle {
+            constructor() {
+                this.reset();
+            }
+
+            reset() {
+                this.x = Math.random() * bgWidth;
+                this.y = bgHeight + Math.random() * 100;
+                this.size = Math.random() * 15 + 8;
+                this.speedY = Math.random() * 1.5 + 0.5;
+                this.speedX = Math.sin(Math.random() * Math.PI) * 0.8;
+                this.opacity = Math.random() * 0.5 + 0.3;
+                this.type = Math.random() > 0.4 ? 'heart' : 'sparkle';
+                this.color = Math.random() > 0.5 ? '#d4af37' : '#f472b6';
+            }
+
+            update() {
+                this.y -= this.speedY;
+                this.x += this.speedX;
+                if (this.y < -30) this.reset();
+            }
+
+            draw() {
+                bgCtx.save();
+                bgCtx.globalAlpha = this.opacity;
+                bgCtx.fillStyle = this.color;
+                
+                if (this.type === 'heart') {
+                    // Draw Heart
+                    bgCtx.beginPath();
+                    const topCurveHeight = this.size * 0.3;
+                    bgCtx.moveTo(this.x, this.y + topCurveHeight);
+                    bgCtx.bezierCurveTo(this.x, this.y, this.x - this.size / 2, this.y, this.x - this.size / 2, this.y + topCurveHeight);
+                    bgCtx.bezierCurveTo(this.x - this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x, this.y + this.size, this.x, this.y + this.size);
+                    bgCtx.bezierCurveTo(this.x, this.y + (this.size + topCurveHeight) / 2, this.x + this.size / 2, this.y + (this.size + topCurveHeight) / 2, this.x + this.size / 2, this.y + topCurveHeight);
+                    bgCtx.bezierCurveTo(this.x + this.size / 2, this.y, this.x, this.y, this.x, this.y + topCurveHeight);
+                    bgCtx.fill();
+                } else {
+                    // Draw Sparkle Star
+                    bgCtx.beginPath();
+                    bgCtx.arc(this.x, this.y, this.size / 4, 0, Math.PI * 2);
+                    bgCtx.fill();
+                }
+                bgCtx.restore();
+            }
+        }
+
+        for (let i = 0; i < 45; i++) {
+            particles.push(new BackgroundParticle());
+        }
+
+        function animateBg() {
+            bgCtx.clearRect(0, 0, bgWidth, bgHeight);
+            particles.forEach(p => {
+                p.update();
+                p.draw();
+            });
+            requestAnimationFrame(animateBg);
+        }
+        animateBg();
+
+        /* ==========================================================================
+           5. CELEBRATION FX CANVAS (Confetti & Fireworks System)
+           ========================================================================== */
+        const fxCanvas = document.getElementById('fxCanvas');
+        const fxCtx = fxCanvas.getContext('2d');
+        let fxWidth, fxHeight;
+        let fxParticles = [];
+
+        function resizeFx() {
+            fxWidth = fxCanvas.width = window.innerWidth;
+            fxHeight = fxCanvas.height = window.innerHeight;
+        }
+        window.addEventListener('resize', resizeFx);
+        resizeFx();
+
+        class ConfettiParticle {
+            constructor(x, y) {
+                this.x = x;
+                this.y = y;
+                this.size = Math.random() * 10 + 6;
+                this.speedX = (Math.random() - 0.5) * 14;
+                this.speedY = Math.random() * -16 - 5;
+                this.gravity = 0.35;
+                this.rotation = Math.random() * 360;
+                this.rotationSpeed = (Math.random() - 0.5) * 10;
+                this.colors = ['#ffd700', '#d4af37', '#ffffff', '#ec4899', '#3b82f6', '#10b981'];
+                this.color = this.colors[Math.floor(Math.random() * this.colors.length)];
+                this.opacity = 1;
+                this.friction = 0.98;
+            }
+
+            update() {
+                this.speedX *= this.friction;
+                this.speedY += this.gravity;
+                this.x += this.speedX;
+                this.y += this.speedY;
+                this.rotation += this.rotationSpeed;
+                this.opacity -= 0.008;
+            }
+
+            draw() {
+                fxCtx.save();
+                fxCtx.globalAlpha = Math.max(0, this.opacity);
+                fxCtx.translate(this.x, this.y);
+                fxCtx.rotate((this.rotation * Math.PI) / 180);
+                fxCtx.fillStyle = this.color;
+                fxCtx.fillRect(-this.size / 2, -this.size / 2, this.size, this.size);
+                fxCtx.restore();
+            }
+        }
+
+        function triggerCelebration() {
+            // Spawn multiple explosions of confetti
+            const burstCount = 150;
+            const originX = fxWidth / 2;
+            const originY = fxHeight * 0.6;
+
+            for (let i = 0; i < burstCount; i++) {
+                fxParticles.push(new ConfettiParticle(originX, originY));
+            }
+
+            // Additional side blasts
+            for (let i = 0; i < 60; i++) {
+                fxParticles.push(new ConfettiParticle(fxWidth * 0.2, fxHeight * 0.7));
+                fxParticles.push(new ConfettiParticle(fxWidth * 0.8, fxHeight * 0.7));
+            }
+        }
+
+        function animateFx() {
+            fxCtx.clearRect(0, 0, fxWidth, fxHeight);
+            for (let i = fxParticles.length - 1; i >= 0; i--) {
+                const p = fxParticles[i];
+                p.update();
+                p.draw();
+                if (p.opacity <= 0 || p.y > fxHeight + 50) {
+                    fxParticles.splice(i, 1);
+                }
+            }
+            requestAnimationFrame(animateFx);
+        }
+        animateFx();
+
+        /* ==========================================================================
+           6. INTERACTIVE EVENTS & MODAL CONTROLS
+           ========================================================================== */
+        const yesBtn = document.getElementById('yesBtn');
+        const modal = document.getElementById('modal');
+        const closeModalBtn = document.getElementById('closeModal');
+
+        yesBtn.addEventListener('click', () => {
+            // Sound Effect
+            playWeddingFanfare();
+            
+            // Visual Confetti Explosions
+            triggerCelebration();
+
+            // Additional continuous celebration bursts
+            let intervals = 0;
+            const burstTimer = setInterval(() => {
+                triggerCelebration();
+                intervals++;
+                if (intervals >= 4) clearInterval(burstTimer);
+            }, 400);
+
+            // Show Modal Popup
+            modal.classList.add('active');
+        });
+
+        closeModalBtn.addEventListener('click', () => {
+            modal.classList.remove('active');
+        });
+
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                modal.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html>
